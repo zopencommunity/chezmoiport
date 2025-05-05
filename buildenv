@@ -15,8 +15,8 @@
 export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
-export ZOPEN_STABLE_URL="https://github.com/twpayne/chezmoi"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS="make" # Specify the stable build dependencies.
+export ZOPEN_STABLE_URL="https://github.com/twpayne/chezmoi.git"  # Specify the stable build URL (either git or tarball)
+export ZOPEN_STABLE_DEPS="check_go make wharf" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
 export ZOPEN_DEV_URL=""   # Specify the dev build URL
@@ -40,11 +40,34 @@ export ZOPEN_SYSTEM_PREREQ=""
 
 #export ZOPEN_BOOTSTRAP="skip" ## Bootstrap program to run (defaults to './bootstrap')
 #export ZOPEN_CHECK="skip"     ## Check program to run (defaults to 'make')
-#export ZOPEN_CONFIGURE="skip" ## Configuration program to run (defaults to './configure')
-#export ZOPEN_INSTALL="skip"   ## Installation program to run (defaults to 'make')
-#export ZOPEN_MAKE="skip"      ## Build program to run (defaults to 'make')
+export ZOPEN_CONFIGURE="zopen_wharf" ## Configuration program to run (defaults to './configure')
+export ZOPEN_CONFIGURE_MINIMAL=1
+export ZOPEN_INSTALL="zopen_install"   ## Installation program to run (defaults to 'make')
+export ZOPEN_MAKE="skip"      ## Build program to run (defaults to 'make')
 #export ZOPEN_CLEAN=""         ## Clean up program to run (defaults to 'make')
+export ZOPEN_COMP="GO"
 
+zopen_wharf()
+{
+  cd ../
+  git clone https://github.com/atotto/clipboard.git
+  git clone https://github.com/jesseduffield/go-git.git
+  echo $PWD
+  go work init ./chezmoi ./clipboard ./go-git
+  wharf ./chezmoi/...
+  wharf ./clipboard/...
+  cd ./chezmoi
+}
+
+zopen_install()
+{
+  echo $PWD
+  set +e
+  make install "$@"
+  mkdir -p $ZOPEN_INSTALL_DIR
+  cp -r bin $ZOPEN_INSTALL_DIR/bin
+  set -e
+}
 
 ###
 ### Required user-supplied functions
