@@ -64,8 +64,8 @@ zopen_install()
   echo $PWD
   set +e
   make install "$@"
-  mkdir -p $ZOPEN_INSTALL_DIR
-  cp -r bin $ZOPEN_INSTALL_DIR/bin
+  mkdir -p $ZOPEN_INSTALL_DIR/bin
+  cp chezmoi $ZOPEN_INSTALL_DIR/bin/
   set -e
 }
 
