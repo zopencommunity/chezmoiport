@@ -1,7 +1,7 @@
 # Update bump details accordingly. Use bump check to confirm.
-# bump: chezmoi-version /CHEZMOI_VERSION="(.*)"/ https://github.com/twpayne/chezmoi|semver:*
-# CHEZMOI_VERSION="V.R.M" # Specify a stable release
-# export ZOPEN_STABLE_TAG="v${CHEZMOI_VERSION}"
+# bump: chezmoi-version /CHEZMOI_VERSION="(.*)"/ https://github.com/twpayne/chezmoi.git|semver:*
+CHEZMOI_VERSION="2.62.2" # Specify a stable release
+export ZOPEN_STABLE_TAG="v${CHEZMOI_VERSION}"
 
 ###
 ### Build control file for the chezmoi port
