@@ -16,7 +16,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
 export ZOPEN_STABLE_URL="https://github.com/twpayne/chezmoi.git"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS="check_go make wharf" # Specify the stable build dependencies.
+export ZOPEN_STABLE_DEPS="check_go wharf" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
 export ZOPEN_DEV_URL=""   # Specify the dev build URL
@@ -38,32 +38,57 @@ export ZOPEN_SYSTEM_PREREQ=""
 ### Build stage control environment variables
 ###
 
+export ZOPEN_COMP=GO
 #export ZOPEN_BOOTSTRAP="skip" ## Bootstrap program to run (defaults to './bootstrap')
 #export ZOPEN_CHECK="skip"     ## Check program to run (defaults to 'make')
 export ZOPEN_CONFIGURE="zopen_wharf" ## Configuration program to run (defaults to './configure')
 export ZOPEN_CONFIGURE_MINIMAL=1
-export ZOPEN_INSTALL="zopen_install"   ## Installation program to run (defaults to 'make')
 export ZOPEN_MAKE="skip"      ## Build program to run (defaults to 'make')
+export ZOPEN_MAKE_MINIMAL=1
 #export ZOPEN_CLEAN=""         ## Clean up program to run (defaults to 'make')
-export ZOPEN_COMP="GO"
+export ZOPEN_CHECK="skip"
+export ZOPEN_CLEAN="zopen_clean"
+export ZOPEN_INSTALL="zopen_install"
+
+#zopen_init()
+#{
+#  export CGO_ENABLED=0
+#  export GOBIN=$ZOPEN_INSTALL_DIR/bin
+#  mkdir -p $ZOPEN_INSTALL_DIR
+#}
+
+zopen_build()
+{
+  echo $PWD
+  go version
+  go build
+}
 
 zopen_wharf()
 {
+  #set -x
   cd ../
   git clone https://github.com/atotto/clipboard.git
   git clone https://github.com/jesseduffield/go-git.git
-  echo $PWD
-  go work init ./chezmoi ./clipboard ./go-git
+  cd go-git; git apply ../patches/go-git.gopatch; cd ..
+  git clone https://github.com/nbutton23/zxcvbn-go.git
+  cd zxcvbn-go; git apply ../patches/entropyCalculator.gopatch; git apply ../patches/scoring.gopatch; cd ..
+  go work init ./chezmoi ./clipboard ./go-git ./zxcvbn-go
   wharf ./chezmoi/...
   wharf ./clipboard/...
   cd ./chezmoi
+}
+
+zopen_clean()
+{
+  rm -rf ../.wharf_cache ../go.work* ../wharf_port
 }
 
 zopen_install()
 {
   echo $PWD
   set +e
-  make install "$@"
+  go install
   mkdir -p $ZOPEN_INSTALL_DIR/bin
   cp chezmoi $ZOPEN_INSTALL_DIR/bin/
   set -e

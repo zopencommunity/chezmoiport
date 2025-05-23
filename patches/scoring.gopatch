@@ -1,0 +1,14 @@
+diff --git a/scoring/scoring.go b/scoring/scoring.go
+index 4f68a6d..fa11fa8 100644
+--- a/scoring/scoring.go
++++ b/scoring/scoring.go
+@@ -4,8 +4,8 @@ import (
+ 	"fmt"
+ 	"github.com/nbutton23/zxcvbn-go/entropy"
+ 	"github.com/nbutton23/zxcvbn-go/match"
+-	"github.com/nbutton23/zxcvbn-go/utils/math"
+ 	"math"
++	zmath "github.com/nbutton23/zxcvbn-go/utils/math"
+ 	"sort"
+ )
+ 

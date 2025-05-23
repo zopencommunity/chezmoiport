@@ -1,0 +1,14 @@
+diff --git a/entropy/entropyCalculator.go b/entropy/entropyCalculator.go
+index 8f57ea0..dd5dc90 100644
+--- a/entropy/entropyCalculator.go
++++ b/entropy/entropyCalculator.go
+@@ -3,8 +3,8 @@ package entropy
+ import (
+ 	"github.com/nbutton23/zxcvbn-go/adjacency"
+ 	"github.com/nbutton23/zxcvbn-go/match"
+-	"github.com/nbutton23/zxcvbn-go/utils/math"
+ 	"math"
++	zmath "github.com/nbutton23/zxcvbn-go/utils/math"
+ 	"regexp"
+ 	"unicode"
+ )
