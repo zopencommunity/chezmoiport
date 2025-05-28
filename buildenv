@@ -43,7 +43,7 @@ export ZOPEN_COMP=GO
 #export ZOPEN_CHECK="skip"     ## Check program to run (defaults to 'make')
 export ZOPEN_CONFIGURE="zopen_wharf" ## Configuration program to run (defaults to './configure')
 export ZOPEN_CONFIGURE_MINIMAL=1
-export ZOPEN_MAKE="skip"      ## Build program to run (defaults to 'make')
+export ZOPEN_MAKE="zopen_build"      ## Build program to run (defaults to 'make')
 export ZOPEN_MAKE_MINIMAL=1
 #export ZOPEN_CLEAN=""         ## Clean up program to run (defaults to 'make')
 export ZOPEN_CHECK="skip"
@@ -59,9 +59,8 @@ export ZOPEN_INSTALL="zopen_install"
 
 zopen_build()
 {
-  echo $PWD
   go version
-  go build
+  go build .
 }
 
 zopen_wharf()
@@ -70,12 +69,12 @@ zopen_wharf()
   cd ../
   git clone https://github.com/atotto/clipboard.git
   git clone https://github.com/jesseduffield/go-git.git
-  cd go-git; git apply ../patches/go-git.gopatch; cd ..
   git clone https://github.com/nbutton23/zxcvbn-go.git
-  cd zxcvbn-go; git apply ../patches/entropyCalculator.gopatch; git apply ../patches/scoring.gopatch; cd ..
-  go work init ./chezmoi ./clipboard ./go-git ./zxcvbn-go
+  go work init ./chezmoi ./clipboard ./zxcvbn-go ./go-git
   wharf ./chezmoi/...
   wharf ./clipboard/...
+  wharf ./go-git/...
+  wharf ./zxcvbn-go/...
   cd ./chezmoi
 }
 
@@ -86,12 +85,8 @@ zopen_clean()
 
 zopen_install()
 {
-  echo $PWD
-  set +e
-  go install
   mkdir -p $ZOPEN_INSTALL_DIR/bin
   cp chezmoi $ZOPEN_INSTALL_DIR/bin/
-  set -e
 }
 
 ###
